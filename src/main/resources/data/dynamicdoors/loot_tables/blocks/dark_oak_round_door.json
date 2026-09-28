@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [ { "type": "minecraft:item", "name": "dynamicdoors:dark_oak_round_door" } ],
+      "conditions": [
+        { "condition": "minecraft:block_state_property", "block": "dynamicdoors:dark_oak_round_door", "properties": { "part": "1" } },
+        { "condition": "minecraft:survives_explosion" }
+      ]
+    }
+  ],
+  "random_sequence": "dynamicdoors:blocks/dark_oak_round_door"
+}

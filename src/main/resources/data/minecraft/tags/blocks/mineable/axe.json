@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "dynamicdoors:oak_round_door",
+    "dynamicdoors:spruce_round_door",
+    "dynamicdoors:birch_round_door",
+    "dynamicdoors:jungle_round_door",
+    "dynamicdoors:acacia_round_door",
+    "dynamicdoors:dark_oak_round_door",
+    "dynamicdoors:mangrove_round_door",
+    "dynamicdoors:cherry_round_door",
+    "dynamicdoors:bamboo_round_door",
+    "dynamicdoors:crimson_round_door",
+    "dynamicdoors:warped_round_door"
+  ]
+}

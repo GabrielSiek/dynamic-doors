@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "round_door",
+  "pattern": [ "PPP", "PDP", "PPP" ],
+  "key": {
+    "P": { "item": "minecraft:iron_ingot" },
+    "D": { "item": "minecraft:iron_door" }
+  },
+  "result": { "item": "dynamicdoors:iron_round_door" }
+}
