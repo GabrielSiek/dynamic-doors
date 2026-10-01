@@ -2,6 +2,8 @@ package com.dynamicdoors.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.List;
+
 /** CLIENT config (config/dynamicdoors-client.toml). Changes apply without a restart. */
 public final class ClientConfig {
     public static final ForgeConfigSpec SPEC;
@@ -11,6 +13,7 @@ public final class ClientConfig {
     public static final ForgeConfigSpec.BooleanValue ANIMATE_FENCE_GATES;
     public static final ForgeConfigSpec.IntValue DURATION_TICKS;
     public static final ForgeConfigSpec.IntValue ROUND_DOOR_DURATION_TICKS;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> EXCLUDED_MODS;
 
     static {
         ForgeConfigSpec.Builder b = new ForgeConfigSpec.Builder();
@@ -27,6 +30,10 @@ public final class ClientConfig {
                 .defineInRange("durationTicks", 7, 1, 40);
         ROUND_DOOR_DURATION_TICKS = b.comment("Length of a full swing of the 3x3 round doors in ticks.")
                 .defineInRange("roundDoorDurationTicks", 10, 1, 60);
+        EXCLUDED_MODS = b.comment("Mods whose doors, trapdoors and gates are left alone because they animate them",
+                        "themselves (Create's sliding doors). Blocks with their own block entity are always left alone.",
+                        "Needs a resource reload (F3+T) to take effect.")
+                .defineListAllowEmpty(List.of("excludedMods"), () -> List.of("create"), o -> o instanceof String);
         b.pop();
 
         SPEC = b.build();
@@ -37,6 +44,14 @@ public final class ClientConfig {
 
     /** Config values throw before the file is loaded; fall back to the defaults. */
     public static boolean get(ForgeConfigSpec.BooleanValue value) {
+        try {
+            return value.get();
+        } catch (IllegalStateException e) {
+            return value.getDefault();
+        }
+    }
+
+    public static List<? extends String> get(ForgeConfigSpec.ConfigValue<List<? extends String>> value) {
         try {
             return value.get();
         } catch (IllegalStateException e) {

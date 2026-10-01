@@ -28,6 +28,10 @@ block that extends the vanilla classes. It is client-side only and uses no mixin
 `config/dynamicdoors-client.toml`: turn each kind on or off, and set `durationTicks` (default 7) and
 `roundDoorDurationTicks` (default 10).
 
+Blocks that animate themselves are left alone. That means any door, trapdoor or gate with its own
+block entity (such as Create's sliding doors), plus every block from the mods in `excludedMods`
+(default `["create"]`). After editing that list, reload resources with F3+T.
+
 ## Development
 
 Gradle 8.8 needs JDK 17 (it fails on Java 25):

@@ -20,6 +20,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -105,8 +106,22 @@ public final class DoorAnimator {
 
     // ---- which blocks ----
 
+    /** Blocks that animate themselves; filled when models are baked. */
+    private static volatile Set<Block> excluded = Set.of();
+
     private static boolean animatable(Block block) {
-        return block instanceof DoorBlock || block instanceof TrapDoorBlock || block instanceof FenceGateBlock;
+        return (block instanceof DoorBlock || block instanceof TrapDoorBlock || block instanceof FenceGateBlock)
+                && !excluded.contains(block);
+    }
+
+    /**
+     * Left alone: blocks with a block entity (they render themselves, like Create's sliding doors) and
+     * blocks from the mods listed in the config.
+     */
+    private static boolean animatesItself(Block block) {
+        if (block instanceof EntityBlock) return true;
+        ResourceLocation id = ForgeRegistries.BLOCKS.getKey(block);
+        return id != null && ClientConfig.get(ClientConfig.EXCLUDED_MODS).contains(id.getNamespace());
     }
 
     private static boolean enabled(BlockState state) {
@@ -119,6 +134,13 @@ public final class DoorAnimator {
 
     public static void onModifyBakingResult(ModelEvent.ModifyBakingResult event) {
         Map<ResourceLocation, BakedModel> models = event.getModels();
+        Set<Block> skip = new HashSet<>();
+        for (Block block : ForgeRegistries.BLOCKS) {
+            if (block instanceof DoorBlock || block instanceof TrapDoorBlock || block instanceof FenceGateBlock) {
+                if (animatesItself(block)) skip.add(block);
+            }
+        }
+        excluded = Set.copyOf(skip);
         for (Block block : ForgeRegistries.BLOCKS) {
             if (!animatable(block)) continue;
             for (BlockState state : block.getStateDefinition().getPossibleStates()) {
